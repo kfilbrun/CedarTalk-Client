@@ -20,8 +20,8 @@ public class MainWindow extends javax.swing.JFrame {
      * Creates new form MainWindow
      */
     public MainWindow() {
-        new LoginWindow(this).setVisible(true);
         initComponents();
+        new LoginWindow(this).setVisible(true);
     }
 
     /**

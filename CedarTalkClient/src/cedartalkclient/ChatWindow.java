@@ -7,6 +7,7 @@ package cedartalkclient;
 
 import edu.cedarville.jvolante.cedartalknetworking.Message;
 import java.awt.event.KeyEvent;
+import javax.swing.JFrame;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
@@ -25,6 +26,7 @@ public class ChatWindow extends javax.swing.JFrame {
         myName = me; 
         this.setTitle(friend);
         dispatcher = d;
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
     
     ClientDispatcher dispatcher;
