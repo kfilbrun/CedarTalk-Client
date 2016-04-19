@@ -180,6 +180,10 @@ public class MainWindow extends javax.swing.JFrame {
         return dispatcher;
     }
     
+    public void setDispatcher(ClientDispatcher d){
+        dispatcher = d;
+    }
+    
     public void setLoggedIn(boolean l){
         loggedIn = l;
     }

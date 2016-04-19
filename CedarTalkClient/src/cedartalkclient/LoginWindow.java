@@ -23,7 +23,6 @@ public class LoginWindow extends javax.swing.JFrame {
     public LoginWindow(MainWindow p) {
         initComponents();
         parent = p;
-        dispatcher = parent.getDispatcher();
     }
 
     /**
@@ -174,7 +173,6 @@ public class LoginWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private ClientDispatcher dispatcher;
     private MainWindow parent;
     
     private void jButtonLoginMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonLoginMousePressed
@@ -194,16 +192,16 @@ public class LoginWindow extends javax.swing.JFrame {
             return false;
         }
         String uName = jTextFieldUserName.getText();
-        String pWord = jPasswordField.getPassword().toString();
+        String pWord = new String(jPasswordField.getPassword());
         
         Message m = new Message(messageType, uName + " " + pWord);
         createDispatcher();
-        dispatcher.sendMessage(m);
-        boolean good = dispatcher.validateConnection();
+        parent.getDispatcher().sendMessage(m);
+        boolean good = parent.getDispatcher().validateConnection();
         if(good){
             parent.setMyUsername(uName);
             parent.setLoggedIn(true);
-            dispatcher.start();
+            parent.getDispatcher().start();
             return true;
         }
         else{
@@ -234,12 +232,12 @@ public class LoginWindow extends javax.swing.JFrame {
     }
     
     private void createDispatcher(){
-        if(dispatcher == null){
+        if(parent.getDispatcher() == null){
             try{
                 String ip = jTextFieldIPAddr.getText();
                 SocketAddress address = new InetSocketAddress(ip, 4220);
                 SocketChannel client = SocketChannel.open(address);
-                dispatcher = new ClientDispatcher(client, parent);
+                parent.setDispatcher(new ClientDispatcher(client, parent));
             }
             catch(Exception e){
                 jLabelInfo.setText("Unable to connect.");

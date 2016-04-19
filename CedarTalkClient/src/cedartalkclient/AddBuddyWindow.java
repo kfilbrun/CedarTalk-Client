@@ -20,12 +20,10 @@ public class AddBuddyWindow extends javax.swing.JFrame {
     public AddBuddyWindow(MainWindow w) {
         initComponents();
         parent = w;
-        dispatcher = w.getDispatcher();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     private MainWindow parent;
-    private ClientDispatcher dispatcher;
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -101,7 +99,7 @@ public class AddBuddyWindow extends javax.swing.JFrame {
         String buddyName = jTextFieldBuddyName.getText();
         if(!buddyName.equals("")){
             Message m = new Message(8, parent.getMyUsername() + " " + buddyName);
-            dispatcher.sendMessage(m);
+            parent.getDispatcher().sendMessage(m);
             this.setVisible(false);
         }
     }//GEN-LAST:event_jButtonAddBuddyActionPerformed

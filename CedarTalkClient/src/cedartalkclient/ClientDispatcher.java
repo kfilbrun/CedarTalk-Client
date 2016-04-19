@@ -34,7 +34,9 @@ public class ClientDispatcher extends Dispatcher{
     
     
     protected boolean validateConnection(){
+        boolean test = in.isOpen();
         Scanner s = new Scanner(Channels.newInputStream(in));
+        boolean test2 = in.isOpen();
         Message m = new Message(s.nextLine());
         
         if(m.getID() == 6){
