@@ -8,6 +8,8 @@ package cedartalkclient;
 import edu.cedarville.jvolante.cedartalknetworking.Dispatcher;
 import edu.cedarville.jvolante.cedartalknetworking.InvalidConnectionException;
 import edu.cedarville.jvolante.cedartalknetworking.Message;
+import java.io.IOException;
+import java.net.Socket;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
@@ -21,7 +23,7 @@ public class ClientDispatcher extends Dispatcher{
     MainWindow parent;
     ReadableByteChannel input = null;
     
-    public ClientDispatcher(SocketChannel sc, MainWindow p) throws InvalidConnectionException{
+    public ClientDispatcher(Socket sc, MainWindow p) throws InvalidConnectionException, IOException{
         super(sc);
         parent = p;
     }
@@ -29,8 +31,6 @@ public class ClientDispatcher extends Dispatcher{
     protected void processIncoming(Message message){
         parent.processMessage(message);
     }
-    
-    
     
     protected boolean validateConnection(){
         Scanner s = new Scanner(in);

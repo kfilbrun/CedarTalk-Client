@@ -237,8 +237,7 @@ public class LoginWindow extends javax.swing.JFrame {
         if(dispatcher == null){
             try{
                 String ip = jTextFieldIPAddr.getText();
-                SocketAddress address = new InetSocketAddress(ip, 4220);
-                SocketChannel client = SocketChannel.open(address);
+                Socket client = new Socket(ip, 4220);
                 dispatcher = new ClientDispatcher(client, parent);
             }
             catch(Exception e){
