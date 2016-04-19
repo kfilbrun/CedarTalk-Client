@@ -6,7 +6,10 @@
 package cedartalkclient;
 
 import edu.cedarville.jvolante.cedartalknetworking.Message;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.nio.channels.SocketChannel;
 
 /**
  *
@@ -232,11 +235,11 @@ public class LoginWindow extends javax.swing.JFrame {
     
     private void createDispatcher(){
         if(dispatcher == null){
-            Socket s;
             try{
                 String ip = jTextFieldIPAddr.getText();
-                s = new Socket(ip, 4220);
-                dispatcher = new ClientDispatcher(s.getChannel(), parent);
+                SocketAddress address = new InetSocketAddress(ip, 4220);
+                SocketChannel client = SocketChannel.open(address);
+                dispatcher = new ClientDispatcher(client, parent);
             }
             catch(Exception e){
                 jLabelInfo.setText("Unable to connect.");
