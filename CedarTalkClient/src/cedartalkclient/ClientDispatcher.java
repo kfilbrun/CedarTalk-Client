@@ -8,6 +8,7 @@ package cedartalkclient;
 import edu.cedarville.jvolante.cedartalknetworking.Dispatcher;
 import edu.cedarville.jvolante.cedartalknetworking.InvalidConnectionException;
 import edu.cedarville.jvolante.cedartalknetworking.Message;
+import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
@@ -33,7 +34,7 @@ public class ClientDispatcher extends Dispatcher{
     
     
     protected boolean validateConnection(){
-        Scanner s = new Scanner(in);
+        Scanner s = new Scanner(Channels.newInputStream(in));
         Message m = new Message(s.nextLine());
         
         if(m.getID() == 6){
