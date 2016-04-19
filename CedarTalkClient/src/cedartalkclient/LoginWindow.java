@@ -32,6 +32,8 @@ public class LoginWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDialog1 = new javax.swing.JDialog();
+        jDialog2 = new javax.swing.JDialog();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -43,6 +45,28 @@ public class LoginWindow extends javax.swing.JFrame {
         jButtonLogin = new javax.swing.JButton();
         jLabelInfo = new javax.swing.JLabel();
         jButtonCreateAccount = new javax.swing.JButton();
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
+        jDialog2.getContentPane().setLayout(jDialog2Layout);
+        jDialog2Layout.setHorizontalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog2Layout.setVerticalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -151,41 +175,61 @@ public class LoginWindow extends javax.swing.JFrame {
     private MainWindow parent;
     
     private void jButtonLoginMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonLoginMousePressed
-        String uName = jTextFieldUserName.getText();
-        String pWord = jPasswordField.getPassword().toString();
-        
-        Message m = new Message(1, uName + " " + pWord);
-        createDispatcher();
-        dispatcher.sendMessage(m);
-        boolean good = dispatcher.validateConnection();
-        if(good){
-            parent.setMyUsername(uName);
-            dispatcher.start();
+        if(validateConnection(1)){
             this.setVisible(false);
-        }
-        else{
-            jLabelInfo.setText("Account Creation Succeeded");
         }
     }//GEN-LAST:event_jButtonLoginMousePressed
 
     private void jButtonCreateAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateAccountActionPerformed
+        if(validateConnection(0)){
+            this.setVisible(false);
+        }
+    }//GEN-LAST:event_jButtonCreateAccountActionPerformed
+
+    private boolean validateConnection(int messageType){
+        if(!validateFields()){
+            return false;
+        }
         String uName = jTextFieldUserName.getText();
         String pWord = jPasswordField.getPassword().toString();
         
-        Message m = new Message(0, uName + " " + pWord);
+        Message m = new Message(messageType, uName + " " + pWord);
         createDispatcher();
         dispatcher.sendMessage(m);
         boolean good = dispatcher.validateConnection();
         if(good){
             parent.setMyUsername(uName);
+            parent.setLoggedIn(true);
             dispatcher.start();
-            this.setVisible(false);
+            return true;
         }
         else{
-            jLabelInfo.setText("Account Creation Succeeded");
+            if(messageType == 0){
+                jLabelInfo.setText("Account Creation Failed");
+            }
+            else{
+                jLabelInfo.setText("Login Failed");
+            }
+            return false;
         }
-    }//GEN-LAST:event_jButtonCreateAccountActionPerformed
-
+    }
+    
+    private boolean validateFields(){
+        if(jTextFieldIPAddr.getText().equals("")){
+            jLabelInfo.setText("Please Provide IP");
+            return false;
+        }
+        if(jTextFieldUserName.getText().equals("")){
+            jLabelInfo.setText("Please Provide User");
+            return false;
+        }
+        if(jPasswordField.getPassword().length == 0){
+            jLabelInfo.setText("Please Provide Password");
+            return false;
+        }
+        return true;
+    }
+    
     private void createDispatcher(){
         if(dispatcher == null){
             Socket s;
@@ -200,45 +244,12 @@ public class LoginWindow extends javax.swing.JFrame {
             }
         }
     }
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginWindow(null).setVisible(true); //WILL BE LAUNCHED FROM MAIN WINDOW TODO
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCreateAccount;
     private javax.swing.JButton jButtonLogin;
+    private javax.swing.JDialog jDialog1;
+    private javax.swing.JDialog jDialog2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

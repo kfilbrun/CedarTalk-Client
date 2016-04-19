@@ -20,8 +20,8 @@ public class MainWindow extends javax.swing.JFrame {
      * Creates new form MainWindow
      */
     public MainWindow() {
-        initComponents();
         new LoginWindow(this).setVisible(true);
+        initComponents();
     }
 
     /**
@@ -79,10 +79,12 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        int rowClicked = jTable1.rowAtPoint(evt.getPoint());
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        String friendName = (String) model.getValueAt(rowClicked, 0);
-        getChatWindow(friendName);
+        if(loggedIn){
+            int rowClicked = jTable1.rowAtPoint(evt.getPoint());
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            String friendName = (String) model.getValueAt(rowClicked, 0);
+            getChatWindow(friendName);
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     //Send logout message
@@ -134,6 +136,7 @@ public class MainWindow extends javax.swing.JFrame {
     private ClientDispatcher dispatcher;
     private Map<String, ChatWindow> chatWindows = new HashMap<>();
     private String myUsername = "";
+    private boolean loggedIn = false;
     
     public void processMessage(Message message){
         switch(message.getID()){
@@ -153,6 +156,10 @@ public class MainWindow extends javax.swing.JFrame {
     
     public ClientDispatcher getDispatcher(){
         return dispatcher;
+    }
+    
+    public void setLoggedIn(boolean l){
+        loggedIn = l;
     }
     
     public void setMyUsername(String s){
@@ -189,6 +196,7 @@ public class MainWindow extends javax.swing.JFrame {
             w = new ChatWindow(myUsername, friendName, dispatcher);
             chatWindows.put(friendName, w);
             w.setVisible(true);
+            w.setAlwaysOnTop(true);
         }
         return w;
     }
