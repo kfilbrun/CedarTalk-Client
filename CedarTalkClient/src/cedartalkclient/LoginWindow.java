@@ -235,14 +235,9 @@ public class LoginWindow extends javax.swing.JFrame {
         if(parent.getDispatcher() == null){
             try{
                 String ip = jTextFieldIPAddr.getText();
-<<<<<<< HEAD
-                SocketAddress address = new InetSocketAddress(ip, 4220);
-                SocketChannel client = SocketChannel.open(address);
-                parent.setDispatcher(new ClientDispatcher(client, parent));
-=======
+                
                 Socket client = new Socket(ip, 4220);
-                dispatcher = new ClientDispatcher(client, parent);
->>>>>>> d2506f1d8c1781080061e9fd3ed48acfb4bb661c
+                parent.setDispatcher(new ClientDispatcher(client, parent));
             }
             catch(Exception e){
                 jLabelInfo.setText("Unable to connect.");
