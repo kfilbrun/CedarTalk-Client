@@ -21,6 +21,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         initComponents();
+        new LoginWindow(this).setVisible(true);
     }
 
     /**
@@ -145,11 +146,6 @@ public class MainWindow extends javax.swing.JFrame {
             case 5:
                 removeActiveUser(message);
                 break;
-            case 6:
-                //Signal successful login?
-                break;
-            case 7:
-                //Signal failed login?
             default:
                 System.err.println("Incorrect message received" + message.getID() + " " + message.getData());
         }

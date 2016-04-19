@@ -5,9 +5,8 @@
  */
 package cedartalkclient;
 
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.nio.channels.SocketChannel;
+import edu.cedarville.jvolante.cedartalknetworking.Message;
+import java.net.Socket;
 
 /**
  *
@@ -43,7 +42,7 @@ public class LoginWindow extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jButtonLogin = new javax.swing.JButton();
         jLabelInfo = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jButtonCreateAccount = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -65,6 +64,13 @@ public class LoginWindow extends javax.swing.JFrame {
         });
 
         jLabelInfo.setText("Please type your login info.");
+
+        jButtonCreateAccount.setText("Create Account");
+        jButtonCreateAccount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCreateAccountActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -90,8 +96,11 @@ public class LoginWindow extends javax.swing.JFrame {
                         .addGap(91, 91, 91)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelInfo)
-                            .addComponent(jButtonLogin))))
-                .addContainerGap(75, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jButtonLogin)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonCreateAccount)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,45 +118,30 @@ public class LoginWindow extends javax.swing.JFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabelInfo))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelInfo)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(jButtonLogin))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonLogin)
+                    .addComponent(jButtonCreateAccount)))
         );
-
-        jButton1.setText("Create Account");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(194, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(109, 109, 109))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(157, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
@@ -157,27 +151,56 @@ public class LoginWindow extends javax.swing.JFrame {
     private MainWindow parent;
     
     private void jButtonLoginMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonLoginMousePressed
-        if(dispatcher == null){
-            try{
-                SocketAddress sa = new InetSocketAddress(jTextFieldIPAddr.getText(), 4220);
-                SocketChannel sc = SocketChannel.open(sa);
-                dispatcher = new ClientDispatcher(sc, parent);
-            }
-            catch(Exception e){
-                jLabelInfo.setText("Error establishing connection.");
-            }
+        String uName = jTextFieldUserName.getText();
+        String pWord = jPasswordField.getPassword().toString();
+        
+        Message m = new Message(1, uName + " " + pWord);
+        createDispatcher();
+        dispatcher.sendMessage(m);
+        boolean good = dispatcher.validateConnection();
+        if(good){
+            parent.setMyUsername(uName);
+            dispatcher.start();
+            this.setVisible(false);
         }
-        //TODO: Actually verify the login info with the server
-        //If login is good, close login dialog, leaving parent with usable dispatcher
-        //Only problem is we need to intercept the return message here instead of
-        //Having it hit the parent "message received"
-        //Send user active message to server
+        else{
+            jLabelInfo.setText("Account Creation Succeeded");
+        }
     }//GEN-LAST:event_jButtonLoginMousePressed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButtonCreateAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateAccountActionPerformed
+        String uName = jTextFieldUserName.getText();
+        String pWord = jPasswordField.getPassword().toString();
+        
+        Message m = new Message(0, uName + " " + pWord);
+        createDispatcher();
+        dispatcher.sendMessage(m);
+        boolean good = dispatcher.validateConnection();
+        if(good){
+            parent.setMyUsername(uName);
+            dispatcher.start();
+            this.setVisible(false);
+        }
+        else{
+            jLabelInfo.setText("Account Creation Succeeded");
+        }
+    }//GEN-LAST:event_jButtonCreateAccountActionPerformed
 
+    private void createDispatcher(){
+        if(dispatcher == null){
+            Socket s;
+            try{
+                String ip = jTextFieldIPAddr.getText();
+                s = new Socket(ip, 4220);
+                dispatcher = new ClientDispatcher(s.getChannel(), parent);
+            }
+            catch(Exception e){
+                jLabelInfo.setText("Unable to connect.");
+                return;
+            }
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -214,7 +237,7 @@ public class LoginWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonCreateAccount;
     private javax.swing.JButton jButtonLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

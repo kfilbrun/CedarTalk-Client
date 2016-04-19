@@ -10,7 +10,7 @@ import edu.cedarville.jvolante.cedartalknetworking.InvalidConnectionException;
 import edu.cedarville.jvolante.cedartalknetworking.Message;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SocketChannel;
-import java.nio.channels.WritableByteChannel;
+import java.util.Scanner;
 
 /**
  *
@@ -19,6 +19,7 @@ import java.nio.channels.WritableByteChannel;
 public class ClientDispatcher extends Dispatcher{
     
     MainWindow parent;
+    ReadableByteChannel input = null;
     
     public ClientDispatcher(SocketChannel sc, MainWindow p) throws InvalidConnectionException{
         super(sc);
@@ -29,8 +30,18 @@ public class ClientDispatcher extends Dispatcher{
         parent.processMessage(message);
     }
     
-    protected boolean validateConnection(ReadableByteChannel in, WritableByteChannel out){
-        //TODO: Implement
-        return false;
+    
+    
+    protected boolean validateConnection(){
+        Scanner s = new Scanner(in);
+        Message m = new Message(s.nextLine());
+        
+        if(m.getID() == 6){
+            onGoodConnection();
+            return true;
+        }
+        else{
+            return false;
+        }
     };
 }
